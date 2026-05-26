@@ -7,29 +7,50 @@
     <script src="https://telegram.org"></script>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             background-color: #0b0b0b;
             color: #ffffff;
             margin: 0;
             padding: 20px;
             text-align: center;
         }
-        .header h1 { font-size: 32px; margin: 10px 0; color: #ffcc00; text-transform: uppercase; }
+        .header { margin-bottom: 25px; }
+        .header h1 { font-size: 32px; margin: 5px 0; color: #ffcc00; text-transform: uppercase; letter-spacing: 1px; }
         .header p { color: #888888; font-size: 13px; text-transform: uppercase; font-weight: bold; }
         
-        /* Кнопки переключения валюты */
-        .currency-switcher { margin-bottom: 25px; }
-        .currency-btn { background: #161616; border: 2px solid #222; color: #fff; padding: 12px 24px; border-radius: 8px; font-weight: bold; font-size: 14px; margin: 0 5px; cursor: pointer; }
-        .currency-btn.active { background: #ffcc00; color: #000; border-color: #ffcc00; }
+        .section-title { font-size: 14px; color: #ffcc00; text-align: left; margin: 20px auto 10px auto; max-width: 400px; font-weight: bold; text-transform: uppercase; }
         
-        /* Карточки тарифов */
-        .tariffs { display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin: 0 auto 25px auto; }
-        .tariff-card { background-color: #121212; border: 2px solid #222222; border-radius: 14px; padding: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .tariff-card.selected { border-color: #ffcc00; background-color: #1a1913; }
-        .title { font-size: 20px; font-weight: bold; color: #fff; }
-        .tariff-card.selected .title { color: #ffcc00; }
-        .desc { font-size: 12px; color: #555; margin-top: 4px; }
-        .tariff-price { font-size: 22px; font-weight: bold; color: #ffcc00; }
+        .tariffs { display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin: 0 auto; }
+        
+        /* Кнопки сделаны как полноценные крупные элементы */
+        .pay-button { 
+            background-color: #121212; 
+            border: 2px solid #222222; 
+            border-radius: 14px; 
+            padding: 18px 22px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            text-align: left;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            transition: transform 0.1s, border-color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .pay-button:active {
+            transform: scale(0.98);
+            border-color: #ffcc00;
+            background-color: #1a1913;
+        }
+        .title { font-size: 18px; font-weight: bold; color: #ffffff; }
+        .desc { font-size: 12px; color: #666666; margin-top: 3px; }
+        .price { font-size: 20px; font-weight: bold; color: #ffcc00; }
+
+        .features { text-align: left; max-width: 350px; margin: 30px auto 0 auto; background: #121212; border: 1px solid #222222; padding: 15px; border-radius: 12px; font-size: 13px; color: #aaaaaa; }
+        .features div { margin-bottom: 8px; display: flex; align-items: center; }
+        .features div:last-child { margin-bottom: 0; }
+        .features div::before { content: "✦"; color: #ffcc00; margin-right: 10px; }
     </style>
 </head>
 <body>
@@ -39,92 +60,65 @@
         <p>⚡ Автоответчик для твоего бизнеса 24/7 ⚡</p>
     </div>
 
-    <!-- Переключатель валют -->
-    <div class="currency-switcher">
-        <button class="currency-btn active" id="btn-rub">РУБЛИ (₽)</button>
-        <button class="currency-btn" id="btn-stars">ЗВЕЗДЫ (⭐️)</button>
-    </div>
-
-    <!-- Тарифы -->
+    <!-- ТАРИФЫ В РУБЛЯХ -->
+    <div class="section-title">Оплата в Рублях (₽)</div>
     <div class="tariffs">
-        <div class="tariff-card selected" id="tariff-week">
+        <button class="pay-button" onclick="sendOrder('week', 'RUB')">
             <div>
-                <div class="title">1 НЕДЕЛЯ</div>
+                <div class="title">1 НЕДЕЛЯ — ₽</div>
                 <div class="desc">БЫСТРЫЙ ТЕСТ СИСТЕМЫ</div>
             </div>
-            <div class="tariff-price" id="price-week">150 ₽</div>
-        </div>
+            <div class="price">150 ₽</div>
+        </button>
 
-        <div class="tariff-card" id="tariff-month">
+        <button class="pay-button" onclick="sendOrder('month', 'RUB')">
             <div>
-                <div class="title">1 МЕСЯЦ</div>
+                <div class="title">1 МЕСЯЦ — ₽</div>
                 <div class="desc">ПОЛНЫЙ БЕЗЛИМИТНЫЙ ДОСТУП</div>
             </div>
-            <div class="tariff-price" id="price-month">200 ₽</div>
-        </div>
+            <div class="price">200 ₽</div>
+        </button>
+    </div>
+
+    <!-- ТАРИФЫ В ЗВЕЗДАХ -->
+    <div class="section-title">Оплата в Звездах (⭐️)</div>
+    <div class="tariffs">
+        <button class="pay-button" onclick="sendOrder('week', 'STARS')">
+            <div>
+                <div class="title">1 НЕДЕЛЯ — ⭐️</div>
+                <div class="desc">БЫСТРЫЙ ТЕСТ СИСТЕМЫ</div>
+            </div>
+            <div class="price">80 ⭐️</div>
+        </button>
+
+        <button class="pay-button" onclick="sendOrder('month', 'STARS')">
+            <div>
+                <div class="title">1 МЕСЯЦ — ⭐️</div>
+                <div class="desc">ПОЛНЫЙ БЕЗЛИМИТНЫЙ ДОСТУП</div>
+            </div>
+            <div class="price">110 ⭐️</div>
+        </button>
+    </div>
+
+    <div class="features">
+        <div>Мгновенный автоответ клиентам без задержек</div>
+        <div>Полная симуляция печати текста в чате</div>
+        <div>Подключение личных ИИ-скриптов продаж</div>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
-        tg.MainButton.setParams({ text_color: "#000000", button_color: "#ffcc00" });
-
-        let currentCurrency = 'RUB';
-        let currentTariff = 'week';
-        const prices = {
-            RUB: { week: '150 ₽', month: '200 ₽' },
-            STARS: { week: '80 ⭐️', month: '110 ⭐️' }
-        };
-
-        tg.MainButton.text = "АКТИВИРОВАТЬ ПОДПИСКУ (150 ₽)";
-        tg.MainButton.show();
-
-        // Элементы
-        const btnRub = document.getElementById('btn-rub');
-        const btnStars = document.getElementById('btn-stars');
-        const weekCard = document.getElementById('tariff-week');
-        const monthCard = document.getElementById('tariff-month');
-
-        // Функции обновления интерфейса
-        function changeCurrency(currency) {
-            currentCurrency = currency;
-            btnRub.className = 'currency-btn' + (currency === 'RUB' ? ' active' : '');
-            btnStars.className = 'currency-btn' + (currency === 'STARS' ? ' active' : '');
-            document.getElementById('price-week').innerText = prices[currency].week;
-            document.getElementById('price-month').innerText = prices[currency].month;
-            updateButtonText();
-        }
-
-        function selectTariff(tariff) {
-            currentTariff = tariff;
-            weekCard.className = 'tariff-card' + (tariff === 'week' ? ' selected' : '');
-            monthCard.className = 'tariff-card' + (tariff === 'month' ? ' selected' : '');
-            updateButtonText();
-        }
-
-        function updateButtonText() {
-            tg.MainButton.text = `АКТИВИРОВАТЬ ПОДПИСКУ (${prices[currentCurrency][currentTariff]})`;
-        }
-
-        // Железобетонные обработчики кликов и тапов напрямую через свойства
-        btnRub.onclick = () => changeCurrency('RUB');
-        btnRub.ontouchstart = () => changeCurrency('RUB');
         
-        btnStars.onclick = () => changeCurrency('STARS');
-        btnStars.ontouchstart = () => changeCurrency('STARS');
+        // Скрываем большую кнопку ТГ, так как теперь платим напрямую по клику на карточки!
+        tg.MainButton.hide();
 
-        weekCard.onclick = () => selectTariff('week');
-        weekCard.ontouchstart = () => selectTariff('week');
-
-        monthCard.onclick = () => selectTariff('month');
-        monthCard.ontouchstart = () => selectTariff('month');
-
-        // Кнопка оплаты Телеграм
-        tg.MainButton.onClick(() => {
-            tg.sendData(JSON.stringify({ tariff: currentTariff, currency: currentCurrency }));
+        function sendOrder(tariff, currency) {
+            // При клике на любую кнопку данные мгновенно улетают боту, а приложение закрывается
+            tg.sendData(JSON.stringify({ tariff: tariff, currency: currency }));
             tg.close();
-        });
+        }
     </script>
 </body>
 </html>
